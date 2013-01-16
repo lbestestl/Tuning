@@ -2,7 +2,8 @@
 #include "ui_mainwindow.h"
 
 
-int gtemp;
+int sqliteData;
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -85,34 +86,26 @@ void MainWindow::eventPushButton()
 
 void MainWindow::comboBoxesLogic(int index)
 {
-    if (index >= 0 && index < 12) {
+    if (index >= 0 && index < 12 && eventFlag) {
         tuningComboBox->setCurrentIndex(0);
     } else if (index == 12) {
         if (tuningComboBox->currentIndex() != 0) {
+            eventFlag = false;
             for (int i = 0; i < scaleComboBox.size(); ++i) {
-                std::string query = "select s";
-                std::stringstream out;
-                out << (6-i);
-                query += out.str();
-                query += " from tuning where id = ";
-                std::stringstream out2;
-                out2 << tuningComboBox->currentIndex();
-                query += out2.str();
-                int result = sqlite3_exec(mydb, query.c_str(), callback, 0, NULL);
-                scaleComboBox[i]->setCurrentIndex(gtemp);
+                std::stringstream query;
+                query<<"select s"<<(6-i)<<" from tuning where id = "
+                    <<tuningComboBox->currentIndex();
+                sqlite3_exec(mydb, query.str().c_str(), callback, 0, NULL);
+                scaleComboBox[i]->setCurrentIndex(sqliteData);
             }
             for (int i = 0; i < octaveComboBox.size(); ++i) {
-                std::string query = "select o";
-                std::stringstream out;
-                out << (6-i);
-                query += out.str();
-                query += " from tuning where id = ";
-                std::stringstream out2;
-                out2 << tuningComboBox->currentIndex();
-                query += out2.str();
-                int result = sqlite3_exec(mydb, query.c_str(), callback, 0, NULL);
-                octaveComboBox[i]->setCurrentIndex(gtemp);
+                std::stringstream query;
+                query<<"select o"<<(6-i)<<" from tuning where id = "
+                    <<tuningComboBox->currentIndex();
+                sqlite3_exec(mydb, query.str().c_str(), callback, 0, NULL);
+                octaveComboBox[i]->setCurrentIndex(sqliteData);
             }
+            eventFlag = true;
         }
     } else {
         //err
@@ -147,8 +140,8 @@ void MainWindow::pushButtonsLogic(int index)
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
-    gtemp = argv[0] ? atoi(argv[0]) : -1;
-    return gtemp;
+    sqliteData = argv[0] ? atoi(argv[0]) : -1;
+    return sqliteData;
     //return 0;
 }
 

@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <sstream>
 #include <string>
+#include <AL/al.h>
+#include <AL/alut.h>
 #include "sqlite3.h"
 
 
@@ -42,6 +44,7 @@ private:
     QComboBox* tuningComboBox;
     sqlite3* mydb;
     char* dbErrMsg;
+    bool eventFlag;
 
 private slots:
     void pushButtonsLogic(int index);
