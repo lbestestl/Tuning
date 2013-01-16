@@ -17,14 +17,26 @@ Makefile
 makefile
 gnuMakefile
 
-#sqlite
+#Database
 *.sqlite
+*.db
 
-#image
+#Image
 *.jpeg
 *.gif
 *.png
 
-#qt files
+#Sound
+*.wav
+*.mp3
+
+#Qt files
 *.pro
 *.pro.user
+
+#Binary files
+*.exe
+*.run
+
+#Backup files
+*.*~
